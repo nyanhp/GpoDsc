@@ -1,0 +1,31 @@
+*TempPoint*
+*.pssproj
+
+# ignore the settings folder and files for VSCode
+.vscode/*
+*.psproj
+
+# Ignore staging info from Visual Studio
+library/PSModuleDevelopment/.vs/PSModuleDevelopment/v15/.suo
+library/PSModuleDevelopment/.vs/*
+library/PSModuleDevelopment/PSModuleDevelopment/bin/*
+library/PSModuleDevelopment/PSModuleDevelopment/obj/*
+
+# ignore library
+# PSModuleDevelopment/bin/PSModuleDevelopment.dll
+# PSModuleDevelopment/bin/PSModuleDevelopment.xml
+# PSModuleDevelopment/bin/PSModuleDevelopment.pdb
+
+# ignore PowerShell Studio MetaData
+PSModuleDevelopment/PSModuleDevelopment.psproj
+PSModuleDevelopment/PSModuleDevelopment.psproj.bak
+PSModuleDevelopment/PSModuleDevelopment.psprojs
+PSModuleDevelopment/PSModuleDevelopment.psproj
+sh.exe.stackdump
+
+# ignore the TestResults
+TestResults/*
+
+# ignore the build & publishing Directories
+publish/*
+Templates_Build/*

@@ -1,5 +1,0 @@
-enum GpoEnsure
-{
-    Absent
-    Present
-}
