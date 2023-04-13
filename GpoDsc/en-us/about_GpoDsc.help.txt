@@ -1,0 +1,11 @@
+﻿TOPIC
+	about_GpoDsc
+	
+SHORT DESCRIPTION
+	Explains how to use the GpoDsc powershell module
+	
+LONG DESCRIPTION
+	<Insert Content here>
+
+KEYWORDS
+	GpoDsc
