@@ -1,0 +1,5 @@
+enum GpoBlock
+{
+    No
+    Yes
+}

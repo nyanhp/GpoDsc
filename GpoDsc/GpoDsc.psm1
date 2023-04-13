@@ -57,9 +57,20 @@ if ($importIndividualFiles)
 	foreach ($path in (& "$ModuleRoot\internal\scripts\preimport.ps1")) {
 		. Import-ModuleFile -Path $path
 	}
+	# Import all internal classes
+	foreach ($function in (Get-ChildItem "$ModuleRoot\internal\classes" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
+	{
+		. Import-ModuleFile -Path $function.FullName
+	}
 	
 	# Import all internal functions
 	foreach ($function in (Get-ChildItem "$ModuleRoot\internal\functions" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
+	{
+		. Import-ModuleFile -Path $function.FullName
+	}
+	
+	# Import all resource
+	foreach ($function in (Get-ChildItem "$ModuleRoot\resources" -Filter "*.ps1" -Recurse -ErrorAction Ignore))
 	{
 		. Import-ModuleFile -Path $function.FullName
 	}
@@ -72,6 +83,7 @@ if ($importIndividualFiles)
 	
 	# Execute Postimport actions
 	foreach ($path in (& "$ModuleRoot\internal\scripts\postimport.ps1")) {
+		if ([string]::IsNullOrWhiteSpace($path)) { continue }
 		. Import-ModuleFile -Path $path
 	}
 	

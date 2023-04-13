@@ -11,7 +11,7 @@ class GPImport
 
     [GPImport] Get()
     {
-        Write-PSFMessage -String Verbose.GPImport.GetCurrentSettings
+        Write-PSFMessage -String Verbose.GetCurrentSettings
 
         $isGuid = $this.TargetGpo -as [guid]
         $getParam = @{
@@ -27,26 +27,42 @@ class GPImport
             $getParam['Name'] = $this.TargetGpo
         }
 
-        if (-not [string]::IsNullOrWhiteSpace($this.Domain))
+        if (-not [string]::IsNullOrWhiteSpace($this.DomainName))
         {
             $getParam['Domain'] = $this.DomainName
         }
 
-        $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters $this.GetConfigurableDscProperties()
+        $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $getParam['Server'] = Get-NextClosestDomainController @param
 
+        $reasonList = @()
         $currentGpo = Get-GPO @getParam
         if ($currentGpo)
         {            
             Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id
         }
+        else
+        {
+            $reasonList += [GpoReason]@{
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode) -f $($this.GetType().FullName), 'GpoDoesNotExist'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.GpoDoesNotExist) -f $this.TargetGpo, $this.BackupGpo
+            }
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable) -and -not (Test-Path -Path $this.MigrationTable))
+        {
+            $reasonList += [GpoReason]@{
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode) -f $($this.GetType().FullName), 'MigrationTableDoesNotExist'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.MigrationTableDoesNotExist) -f $this.MigrationTable
+            }
+        }
 
         return @{
             BackupGpo      = $this.BackupGpo
             TargetGpo      = $currentGpo.DisplayName
-            MigrationTable = $this.MigrationTable
+            MigrationTable = (Resolve-Path -Path $this.MigrationTable).Path
             DomainName     = $this.DomainName
-            Reasons        = @()
+            Reasons        = $reasonList
         }
     }
 
@@ -58,9 +74,6 @@ class GPImport
 
     [void] Set()
     {
-
-        $parameters = $this.GetConfigurableDscProperties()
-
         $setParam = @{
             CreateIfNeeded = $true
         }
@@ -90,12 +103,18 @@ class GPImport
             $setParam['Domain'] = $this.DomainName
         }
 
+        if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable) -and -not (Test-Path -Path $this.MigrationTable))
+        {
+            Write-PSFMessage -Level Error -String 'Error.GPImport.MigrationTableDoesNotExist' -StringValues $this.MigrationTable
+            return
+        }
+
         if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable))
         {
             $setParam['MigrationTable'] = $this.MigrationTable
         }
 
-        $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -Type $this)
+        $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $setParam['Server'] = Get-NextClosestDomainController @param
     
         Import-GPO @setParam

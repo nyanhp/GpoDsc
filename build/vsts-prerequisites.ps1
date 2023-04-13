@@ -6,3 +6,5 @@ Write-Host "Installing PSFramework" -ForegroundColor Cyan
 Install-Module PSFramework -Force -SkipPublisherCheck
 Write-Host "Installing String" -ForegroundColor Cyan
 Install-Module String -Force -SkipPublisherCheck
+Write-Host "Installing String" -ForegroundColor Cyan
+Install-Module ChangelogManagement -Force -SkipPublisherCheck

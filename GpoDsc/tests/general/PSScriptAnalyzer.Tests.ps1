@@ -27,7 +27,7 @@ Describe 'Invoking PSScriptAnalyzer against commandbase' {
 				It "Should pass $rule" -TestCases @{ analysis = $analysis; rule = $rule } {
 					If ($analysis.RuleName -contains $rule)
 					{
-						$analysis | Where-Object RuleName -EQ $rule -outvariable failures | ForEach-Object { $null = $global:__pester_data.ScriptAnalyzer.Add($_) }
+						$analysis | Where-Object RuleName -EQ $rule -outvariable failures | ForEach-Object { 
 						
 						1 | Should -Be 0
 					}

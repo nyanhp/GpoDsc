@@ -35,6 +35,7 @@ if (-not $WorkingDirectory) { $WorkingDirectory = Split-Path $PSScriptRoot }
 
 # Prepare publish folder
 Write-PSFMessage -Level Important -Message "Creating and populating publishing directory"
+Remove-Item -Path (Join-Path -Path $WorkingDirectory -ChildPath publish) -Recurse -Force
 $publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory
 Copy-Item -Path "$($WorkingDirectory)\GpoDsc" -Destination $publishDir.FullName -Recurse -Force
 
