@@ -1,5 +1,0 @@
-enum GpoBlock
-{
-    No
-    Yes
-}

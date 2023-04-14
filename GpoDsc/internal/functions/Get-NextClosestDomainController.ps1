@@ -20,5 +20,5 @@ function Get-NextClosestDomainController
     }
 
     Write-PSFMessage -String Verbose.GetClosestDc -StringValues $DomainName
-    Get-ADDomainController @parameters
+    (Get-ADDomainController @parameters).HostName
 }

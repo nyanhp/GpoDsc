@@ -4,15 +4,14 @@ class GPImport
     # Name or GUID
     [DscProperty(Key)] [string] $BackupGpo
     # Name or GUID
-    [DscProperty(Key)] [string] $TargetGpo
+    [DscProperty(Mandatory)] [string] $TargetGpo
+    [DscProperty(Mandatory)] [string] $Path
     [DscProperty()] [string] $MigrationTable
     [DscProperty()] [string] $DomainName
     [DscProperty(NotConfigurable)] [GpoReason[]] $Reasons
 
     [GPImport] Get()
     {
-        Write-PSFMessage -String Verbose.GetCurrentSettings
-
         $isGuid = $this.TargetGpo -as [guid]
         $getParam = @{
             ErrorAction = 'SilentlyContinue'
@@ -39,28 +38,37 @@ class GPImport
         $currentGpo = Get-GPO @getParam
         if ($currentGpo)
         {            
-            Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id
+            Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id -Module GpoDsc
         }
         else
         {
             $reasonList += [GpoReason]@{
-                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode) -f $($this.GetType().FullName), 'GpoDoesNotExist'
-                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.GpoDoesNotExist) -f $this.TargetGpo, $this.BackupGpo
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'GpoDoesNotExist'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.GpoDoesNotExist -Module GpoDsc) -f $this.TargetGpo, $this.BackupGpo
             }
         }
 
         if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable) -and -not (Test-Path -Path $this.MigrationTable))
         {
             $reasonList += [GpoReason]@{
-                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode) -f $($this.GetType().FullName), 'MigrationTableDoesNotExist'
-                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.MigrationTableDoesNotExist) -f $this.MigrationTable
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'MigrationTableDoesNotExist'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.MigrationTableDoesNotExist -Module GpoDsc) -f $this.MigrationTable
+            }
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($this.Path) -and -not (Test-Path -Path $this.Path))
+        {
+            $reasonList += [GpoReason]@{
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'ExportDoesNotExist'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPImport.ExportDoesNotExist -Module GpoDsc) -f $this.Path
             }
         }
 
         return @{
             BackupGpo      = $this.BackupGpo
             TargetGpo      = $currentGpo.DisplayName
-            MigrationTable = (Resolve-Path -Path $this.MigrationTable).Path
+            Path           = $this.Path
+            MigrationTable = ($this.MigrationTable | Resolve-Path -ErrorAction SilentlyContinue).Path
             DomainName     = $this.DomainName
             Reasons        = $reasonList
         }
@@ -76,6 +84,7 @@ class GPImport
     {
         $setParam = @{
             CreateIfNeeded = $true
+            Path           = $this.Path
         }
         $isTargetGuid = $this.TargetGpo -as [guid]
         $isSourceGuid = $this.BackupGpo -as [guid]
@@ -105,7 +114,7 @@ class GPImport
 
         if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable) -and -not (Test-Path -Path $this.MigrationTable))
         {
-            Write-PSFMessage -Level Error -String 'Error.GPImport.MigrationTableDoesNotExist' -StringValues $this.MigrationTable
+            Write-PSFMessage -Module GpoDsc -Level Error -String 'Error.GPImport.MigrationTableDoesNotExist' -StringValues $this.MigrationTable
             return
         }
 

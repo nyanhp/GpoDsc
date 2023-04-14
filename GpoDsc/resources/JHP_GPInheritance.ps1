@@ -4,18 +4,15 @@ class GPInheritance
     # Distinguished Name of target OrgUnit
     [DscProperty(Key)] [string] $TargetOrganizationalUnitDn
     # Name or GUID
-    [DscProperty(Mandatory)] [GpoBlock] $BlockedFromInheritance
+    [DscProperty(Mandatory)] [GpoYesNo] $BlockedFromInheritance
     [DscProperty()] [string] $DomainName
     [DscProperty(NotConfigurable)] [GpoReason[]] $Reasons
 
     [GPInheritance] Get()
     {
-        Write-PSFMessage -String Verbose.GetCurrentSettings
-
         $getParam = @{
-            ErrorAction = 'SilentlyContinue'
+            ErrorAction = 'Stop'
             Target      = $this.TargetOrganizationalUnitDn
-            IsBlocked   = $this.BlockedFromInheritance
         }
 
         if (-not [string]::IsNullOrWhiteSpace($this.DomainName))
@@ -26,14 +23,23 @@ class GPInheritance
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $getParam['Server'] = Get-NextClosestDomainController @param
 
-        $currentInheritance = Get-GPInheritance @getParam
+        $orgUnit = try { Get-ADOrganizationalUnit -Identity $this.TargetOrganizationalUnitDn -Server $getParam['Server'] -ErrorAction Stop } catch { } # Suppress errors, the cmdlet ignores ErrorAction SilentlyContinue
+        $currentInheritance = try { Get-GPInheritance @getParam } catch { } # Suppress errors, the cmdlet ignores ErrorAction SilentlyContinue
 
         $reasonList = @()
+        if (-not $orgUnit)
+        {
+            $reasonList += [GpoReason]@{
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'OrgUnitMissing'
+                Phrase = (Get-PSFLocalizedString -Name Error.Generic.OrgUnitMissing -Module GpoDsc) -f $this.GetType().FullName, $this.TargetOrganizationalUnitDn, $getParam['Server']
+            }
+        }
+
         if (($currentInheritance.GpoInheritanceBlocked -and $this.BlockedFromInheritance -eq 'No') -or (-not $currentInheritance.GpoInheritanceBlocked -and $this.BlockedFromInheritance -eq 'Yes'))
         {
             $reasonList += [GpoReason]@{
-                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode) -f $($this.GetType().FullName), 'SettingMismatch'
-                Phrase = (Get-PSFLocalizedString -Name Error.GPInheritance.SettingMismatch) -f $this.BlockedFromInheritance, $currentInheritance.GpoInheritanceBlocked
+                Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'SettingMismatch'
+                Phrase = (Get-PSFLocalizedString -Name Error.GPInheritance.SettingMismatch -Module GpoDsc) -f $this.BlockedFromInheritance, $currentInheritance.GpoInheritanceBlocked
             }
         }
 
@@ -66,6 +72,6 @@ class GPInheritance
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $setParam['Server'] = Get-NextClosestDomainController @param
 
-        
+        Set-GPInheritance @setParam
     }
 }

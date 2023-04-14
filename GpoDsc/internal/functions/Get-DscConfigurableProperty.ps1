@@ -34,6 +34,11 @@ function Get-DscConfigurableProperty
         if (!$notConfigurable)
         {
             $value = $ResourceInstance.$property
+            if (-not $value -or [string]::IsNullOrWhiteSpace($value))
+            {
+                Write-PSFMessage -String Verbose.SkipEmptyProperty -StringValues $Type.FullName, $property
+                continue
+            }
             # Gets the list of valid values from the ValidateSet attribute
             $validateSet = $Type.GetProperty($property).GetCustomAttributes($false).Where({ $_ -is [System.Management.Automation.ValidateSetAttribute] }).ValidValues
             if ($validateSet)

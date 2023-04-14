@@ -22,12 +22,12 @@ $global:__pester_data = @{ }
 & "$global:testroot\..\..\build\vsts-build.ps1" -SkipPublish -LocalRepo
 
 Remove-Module GpoDsc -ErrorAction Ignore
-Import-Module "$global:testroot\..\..\publish\GpoDsc\GpoDsc.psd1" -Force -Verbo
+Import-Module "$global:testroot\..\..\publish\GpoDsc\GpoDsc.psd1" -Force
 
 # Need to import explicitly so we can use the configuration class
 Import-Module Pester
-Import-Module (Join-Path $global:testroot helpers\ActiveDirectory_1.0.1.0_Stubs.psm1)
-Import-Module (Join-Path $global:testroot helpers\GroupPolicy_1.0.0.0_Stubs.psm1)
+Import-Module (Join-Path $global:testroot helpers\ActiveDirectory_1.0.1.0_Stubs.psm1) -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $global:testroot helpers\GroupPolicy_1.0.0.0_Stubs.psm1) -Force -ErrorAction SilentlyContinue
 
 $totalFailed = 0
 $totalRun = 0
