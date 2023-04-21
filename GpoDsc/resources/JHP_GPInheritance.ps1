@@ -54,7 +54,7 @@ class GPInheritance
     [bool] Test()
     {
         $currentStatus = $this.Get()
-        return $currentStatus.Reasons.Count -ne 0
+        return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()

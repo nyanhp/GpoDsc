@@ -38,7 +38,7 @@ class GPImport
         $currentGpo = Get-GPO @getParam
         if ($currentGpo)
         {            
-            Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id -Module GpoDsc
+            Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id -Module GpoDsc -Function Get
         }
         else
         {
@@ -114,7 +114,7 @@ class GPImport
 
         if (-not [string]::IsNullOrWhiteSpace($this.MigrationTable) -and -not (Test-Path -Path $this.MigrationTable))
         {
-            Write-PSFMessage -Module GpoDsc -Level Error -String 'Error.GPImport.MigrationTableDoesNotExist' -StringValues $this.MigrationTable
+            Write-PSFMessage -Function Set -Module GpoDsc -Level Error -String 'Error.GPImport.MigrationTableDoesNotExist' -StringValues $this.MigrationTable
             return
         }
 

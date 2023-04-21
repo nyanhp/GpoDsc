@@ -116,7 +116,7 @@ class GPLink
     [bool] Test()
     {
         $currentStatus = $this.Get()
-        return $currentStatus.Reasons.Count -ne 0
+        return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()
@@ -136,6 +136,7 @@ class GPLink
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $setParam['Server'] = Get-NextClosestDomainController @param
 
+        Write-PSFMessage -Function Set -ModuleName GpoDsc -String Verbose.GPLink.SettingGPLink -StringValues $this.TargetGpo, $this.TargetOrganizationalUnitDn, $this.Order, $this.Enforced, $this.LinkEnabled, $setParam['Server']
         Set-GPLink @setParam
     }
 }
