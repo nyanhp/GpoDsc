@@ -6,5 +6,6 @@
 # Run internal pester tests
 $oldPath = $env:PSModulePath
 $env:PSModulePath = "$env:BUILD_SOURCESDIRECTORY\GpoDsc\publish\GpoDsc;$env:PSModulePath"
+& "$PSScriptRoot\vsts-build.ps1" -SkipPublish -LocalRepo
 & "$PSScriptRoot\..\GpoDsc\tests\pester.ps1"
 $env:PSModulePath = $oldPath

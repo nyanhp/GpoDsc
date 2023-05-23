@@ -1,4 +1,5 @@
-﻿param (
+﻿using module GpoDsc
+param (
 	$TestGeneral = $true,
 	
 	$TestFunctions = $true,
