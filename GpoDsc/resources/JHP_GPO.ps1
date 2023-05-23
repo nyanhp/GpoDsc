@@ -13,6 +13,7 @@ class GPO
 
     [GPO] Get()
     {
+        Test-GpoPrerequisites
         $reasonList = @()
         $resolvedStarterGpo = $null
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
@@ -102,12 +103,14 @@ class GPO
 
     [bool] Test()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $genericParam = @{

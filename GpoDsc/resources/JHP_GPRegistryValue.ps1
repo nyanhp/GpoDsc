@@ -24,6 +24,7 @@ class GPRegistryValue
 
     [GPRegistryValue] Get()
     {
+        Test-GpoPrerequisites
         $getParam = @{
             ErrorAction = 'Stop'
             Target      = $this.TargetOrganizationalUnitDn
@@ -134,12 +135,14 @@ class GPRegistryValue
 
     [bool] Test()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         $param = Sync-Parameter -Command (Get-Command -Name Get-NextClosestDomainController) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)
         $setParam = Sync-Parameter -Command (Get-Command -Name Set-GPRegistryValue) -Parameters (Get-DscConfigurableProperty -ResourceInstance $this)

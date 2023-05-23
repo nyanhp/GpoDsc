@@ -5,6 +5,7 @@
     'Generic.ReasonCode'                             = "{0}:{0}:{1}"
     'Error.Generic.OrgUnitMissing'                   = '[{0}] Organizational Unit "{1}" did not exist when info was requested from "{2}".'
     'Error.Generic.GpoMissing'                       = '[GPO] GPO "{0}" did not exist when info was requested from "{1}".'
+    'Error.Generic.PrerequisistesMissing'            = 'ActiveDirectory and GroupPolicy modules missing, resource cannot work.'
 
     # GPImport
     'Verbose.GPImport.SkipExistingGpo'               = '[GPImport] Skipping import because of existing GPO "{0}" ({1}). Please overwrite settings manually if desired.'

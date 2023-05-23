@@ -13,6 +13,7 @@ class GPLink
 
     [GPLink] Get()
     {
+        Test-GpoPrerequisites
         $getParam = @{
             ErrorAction = 'Stop'
             Target      = $this.TargetOrganizationalUnitDn
@@ -115,12 +116,14 @@ class GPLink
 
     [bool] Test()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()
-    {        
+    {
+        Test-GpoPrerequisites
         $setParam = @{
             Target      = $this.TargetOrganizationalUnitDn
             LinkEnabled = $this.Enabled

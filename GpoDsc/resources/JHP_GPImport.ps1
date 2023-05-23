@@ -12,6 +12,7 @@ class GPImport
 
     [GPImport] Get()
     {
+        Test-GpoPrerequisites
         $isGuid = $this.TargetGpo -as [guid]
         $getParam = @{
             ErrorAction = 'SilentlyContinue'
@@ -76,12 +77,14 @@ class GPImport
 
     [bool] Test()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         return (-not [string]::IsNullOrEmpty($currentStatus.TargetGpo))
     }
 
     [void] Set()
     {
+        Test-GpoPrerequisites
         $setParam = @{
             CreateIfNeeded = $true
             Path           = $this.Path

@@ -10,6 +10,7 @@ class GPInheritance
 
     [GPInheritance] Get()
     {
+        Test-GpoPrerequisites
         $getParam = @{
             ErrorAction = 'Stop'
             Target      = $this.TargetOrganizationalUnitDn
@@ -53,12 +54,14 @@ class GPInheritance
 
     [bool] Test()
     {
+        Test-GpoPrerequisites
         $currentStatus = $this.Get()
         return $currentStatus.Reasons.Count -eq 0
     }
 
     [void] Set()
-    {        
+    {
+        Test-GpoPrerequisites
         $setParam = @{
             Target    = $this.TargetOrganizationalUnitDn
             IsBlocked = $this.BlockedFromInheritance
