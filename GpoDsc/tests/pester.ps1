@@ -1,5 +1,4 @@
-﻿using module GpoDsc # Ensure classes can be imported
-param (
+﻿param (
 	$TestGeneral = $true,
 	
 	$TestFunctions = $true,
@@ -26,7 +25,7 @@ $env:PSModulePath = "$((Resolve-Path $global:testroot\..\..\publish).Path);$env:
 try
 {
 	Remove-Module GpoDsc -ErrorAction Ignore
-	Import-Module "$global:testroot\..\..\publish\GpoDsc\GpoDsc.psd1" -Force
+	Import-Module GpoDsc -Force -Verbose
 
 	# Need to import explicitly so we can use the configuration class
 	Import-Module Pester
