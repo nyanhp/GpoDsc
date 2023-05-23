@@ -70,7 +70,7 @@ class GPO
         {
             $reasonList += [GpoReason]@{
                 Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'GpoMissing'
-                Phrase = (Get-PSFLocalizedString -Name Error.GPO.NoGpo -Module GpoDsc) -f $this.Name, $dc
+                Phrase = (Get-PSFLocalizedString -Name Error.Generic.GpoMissing -Module GpoDsc) -f $this.Name, $dc
             }
         }
 
