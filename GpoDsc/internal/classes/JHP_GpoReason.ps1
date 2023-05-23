@@ -1,4 +1,4 @@
-class GpoReason
+﻿class GpoReason
 {
     [DscProperty()]
     [System.String]

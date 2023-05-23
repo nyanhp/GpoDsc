@@ -2,14 +2,15 @@
 	$moduleRoot = (Resolve-Path "$global:testroot\..").Path
 	$manifest = ((Get-Content "$moduleRoot\GpoDsc.psd1") -join "`n") | Invoke-Expression
 	Context "Basic resources validation" {
-		$files = Get-ChildItem "$moduleRoot\functions" -Recurse -File | Where-Object Name -like "*.ps1"
+		$files = (Get-ChildItem "$moduleRoot\functions" -Recurse -File | Where-Object Name -like "*.ps1").BaseName
+		if (-not $files) { $files = @()}
 		It "Exports all functions in the public folder" -TestCases @{ files = $files; manifest = $manifest } {
 			
-			$functions = (Compare-Object -ReferenceObject $files.BaseName -DifferenceObject $manifest.FunctionsToExport | Where-Object SideIndicator -Like '<=').InputObject
+			$functions = (Compare-Object -ReferenceObject $files -DifferenceObject $manifest.FunctionsToExport | Where-Object SideIndicator -Like '<=').InputObject
 			$functions | Should -BeNullOrEmpty
 		}
 		It "Exports no function that isn't also present in the public folder" -TestCases @{ files = $files; manifest = $manifest } {
-			$functions = (Compare-Object -ReferenceObject $files.BaseName -DifferenceObject $manifest.FunctionsToExport | Where-Object SideIndicator -Like '=>').InputObject
+			$functions = (Compare-Object -ReferenceObject $files -DifferenceObject $manifest.FunctionsToExport | Where-Object SideIndicator -Like '=>').InputObject
 			$functions | Should -BeNullOrEmpty
 		}
 		

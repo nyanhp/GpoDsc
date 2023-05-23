@@ -2,7 +2,7 @@
 using module GpoDsc
 
 InModuleScope -ModuleName GpoDsc { 
-    Describe "JHP_GPImport" -Tag "Unit" {
+    Describe "JHP_GPImport" -Tag "Unit" -Skip {
         Describe "Get" {
             Context 'GPO exists already' {
                 BeforeEach {

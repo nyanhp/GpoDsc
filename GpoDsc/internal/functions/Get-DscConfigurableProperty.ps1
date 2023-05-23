@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     This method returns a hashtable of properties for a given Type
 .DESCRIPTION
@@ -51,7 +51,7 @@ function Get-DscConfigurableProperty
             }
             # Add property to new
             $DscProperties.add($property, $value)
-        } 
+        }
     }
     return $DscProperties
 }

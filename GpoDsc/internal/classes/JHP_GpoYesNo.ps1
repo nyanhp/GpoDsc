@@ -1,4 +1,4 @@
-enum GpoYesNo # wow.
+﻿enum GpoYesNo # wow.
 {
     No
     Yes

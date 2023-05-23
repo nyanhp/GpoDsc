@@ -4,4 +4,7 @@
 # Needs to ensure things are Done Right and only legal commits to master get built
 
 # Run internal pester tests
+$oldPath = $env:PSModulePath
+$env:PSModulePath = "$env:BUILD_SOURCESDIRECTORY\GpoDsc\publish\GpoDsc;$env:PSModulePath"
 & "$PSScriptRoot\..\GpoDsc\tests\pester.ps1"
+$env:PSModulePath = $oldPath

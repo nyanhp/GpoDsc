@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPO
 {
     # Name of new GPO, not GUID
@@ -41,8 +41,8 @@ class GPO
 
             $getParam['Server'] = $dc
 
-            try 
-            { 
+            try
+            {
                 $resolvedStarterGpo = Get-GPO @getParam
             }
             catch

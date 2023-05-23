@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPRegistryPreferenceValue
 {
     # Name or GUID

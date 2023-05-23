@@ -1,4 +1,4 @@
-function Get-NextClosestDomainController
+﻿function Get-NextClosestDomainController
 {
     [CmdletBinding()]
     param

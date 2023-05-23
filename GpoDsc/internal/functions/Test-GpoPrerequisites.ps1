@@ -1,4 +1,4 @@
-function Test-GpoPrerequisites
+﻿function Test-GpoPrerequisites
 {
     [OutputType([hashtable])]
     [CmdletBinding()]

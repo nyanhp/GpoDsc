@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPRegistryValue
 {
     # Name or GUID
@@ -114,7 +114,7 @@ class GPRegistryValue
             $reasonList += [GpoReason]@{
                 Code   = (Get-PSFLocalizedString -Name Generic.ReasonCode -Module GpoDsc) -f $($this.GetType().FullName), 'TooMuchValue'
                 Phrase = (Get-PSFLocalizedString -Name Error.GPRegistryValue.TooMuchValue -Module GpoDsc) -f $this.Gpo, (Join-Path $this.Key $this.ValueName), $getGpoParam['Server']
-            }            
+            }
         }
 
         return @{

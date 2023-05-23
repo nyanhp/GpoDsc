@@ -1,4 +1,5 @@
-﻿param (
+﻿using module GpoDsc # Ensure classes can be imported
+param (
 	$TestGeneral = $true,
 	
 	$TestFunctions = $true,

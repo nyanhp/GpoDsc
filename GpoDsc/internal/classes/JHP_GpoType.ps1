@@ -1,4 +1,4 @@
-enum GpoType
+﻿enum GpoType
 {
     Unknown
     String

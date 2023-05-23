@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPInheritance
 {
     # Distinguished Name of target OrgUnit

@@ -1,4 +1,4 @@
-enum GpoEnsure
+﻿enum GpoEnsure
 {
     Absent
     Present

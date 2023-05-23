@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPLink
 {
     # Distinguished Name of target OrgUnit

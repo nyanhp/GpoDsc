@@ -1,4 +1,4 @@
-[DscResource()]
+﻿[DscResource()]
 class GPImport
 {
     # Name or GUID
@@ -38,7 +38,7 @@ class GPImport
         $reasonList = @()
         $currentGpo = Get-GPO @getParam
         if ($currentGpo)
-        {            
+        {
             Write-PSFMessage -String Verbose.GPImport.SkipExistingGpo -StringValues $currentGpo.DisplayName, $currentGpo.Id -Module GpoDsc -Function Get
         }
         else
